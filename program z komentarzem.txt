@@ -1,0 +1,52 @@
+import os   #import potrzebnych modulow
+import openpyxl
+import tkinter as tk
+from tkinter import filedialog
+
+while True:
+    try:
+        root = tk.Tk()
+        canvas1 = tk.Canvas(root, width=300, height=300, bg='lightsteelblue')
+        canvas1.pack()
+
+        def getExcel():
+            global wb
+
+            import_file_path = filedialog.askopenfilename()
+            wb = openpyxl.load_workbook(import_file_path)  #wb to zmienna okresl plik ktory wskazemy do otwarcia
+
+
+
+        browseButton_Excel = tk.Button(text='wskaż plik excel z danymi \n (klik), a następnie zamknij okienko',
+                                       command=getExcel, bg='green', fg='white',
+                                       font=('helvetica', 12, 'bold'))
+        canvas1.create_window(150, 150, window=browseButton_Excel)
+
+        root.mainloop()
+
+        arkusz = wb["Arkusz1"]     #konkretny arkusz z pliku
+    except NameError:
+        break
+    for c in range(2, arkusz.max_row + 1):  #wlasc program sie zaczyna, c to bedzie numer wiersza z danymi
+        def f(x):
+            return eval(arkusz['A'+str(c)].value)   #wzory na funkce f beda znajdowac sie w kolejnych wierszach kolumny A zacz od 2
+        a = eval(str(arkusz['B'+str(c)].value))  #pocz. przedzialu
+        b = eval(str(arkusz['C'+str(c)].value))   #koniec przedzialu
+        dokl = eval(str(arkusz['D'+str(c)].value))   #na ile kawalkow dzielimy przedzial do calkowania
+        if b >= a and dokl > 0:  #koniec przedzialu musi byc dalej niz poczatek, jezeli true to wykona sie caly nadchodzacy blok
+            h = (b - a) / dokl    #dlugosc malego kawalka
+            suma = 0  #calka na starcie wynosi zero, potem bedziemy dodawac
+            i = 1   #zmienna pomocnicza
+            while i <= dokl:
+                suma = suma + f(a + i * h) * h  #dodajemy kolejne prostokaty
+                i += 1  #inkrementacja zmiennej pomocniczej
+            print("calka z funkcji f(x) = " + arkusz['A'+str(c)].value + " w granicach od " + str(a)  + " do " + str(b) + " przy dokladnosci " + str(dokl) + " wynosi (w przybliżeniu): " + str(suma))
+            arkusz['E'+str(c)].value = suma     #wstawienie wyniku obliczen do kolumny E
+            wb.save(os.path.expanduser('~/Desktop/wyniki.xlsx')) #zapis arkusza z wynikami na pulpicie
+        else:
+            print("dokl musi byc wieksze od 0 a koniec odcinka nie moze byc wczesniej niz poczatek") #jezeli nie zostaly spelnione waruni poczatkowe to blad
+    restart = input("Czy chciałbyś zacząć od nowa? (W przypadku będu w pliku możesz otworzyc arkusz, naprawic usterkę, zamknąć go i zacząć od nowa) (tak/nie): ")  #input od uzytkownika
+    if restart == "tak":   #jezeli wybral tak, to zacznij progra od pocztku (petlawhile)
+        continue
+    else:
+        break     #w przeciwnym wypadku zakoncz
