@@ -1,0 +1,60 @@
+import random
+print("""H A N G M A N
+""")
+word_list = ['python', 'java', 'kotlin', 'javascript']
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'w', 'x', 'y', 'z', 'u', 'v']
+while True:
+    decyzja = input('Type "play" to play the game, "exit" to quit: ')
+    if decyzja == "play":
+        random_word = random.choice(word_list)
+        dummy = random_word
+        wyswietlane = random_word
+        start = random_word
+        a = random_word
+
+        def replace_all(text, repl):
+            for c in a:
+                text = text.replace(c, repl)
+            return text
+
+        i = 1
+        wpisane_literki = []
+        while i <= 8:
+            print("")
+            print(replace_all(wyswietlane, "-"))
+            letter1 = input("Input a letter: ")
+            if len(letter1) != 1:
+                print("You should input a single letter")
+                continue
+            if letter1 not in alphabet:
+                print("Please enter a lowercase English letter")
+                continue
+            if letter1 in random_word and letter1 not in wpisane_literki:
+                wpisane_literki.append(letter1)
+                a = a.replace(letter1, "")
+        
+                if a == "":
+                    print("You guessed the word " + random_word + "!")
+                    print("You survived!")
+                    print("")
+                    break
+            elif letter1 in random_word and letter1 in wpisane_literki:
+                wpisane_literki.append(letter1)
+                print("You've already guessed this letter")
+     
+            elif letter1 not in random_word and letter1 in wpisane_literki:
+                wpisane_literki.append(letter1)
+                print("You've already guessed this letter")
+               
+            else:
+                wpisane_literki.append(letter1)
+                print("That letter doesn't appear in the word")
+        
+                i += 1
+                if i > 8:
+                    print("You lost!")
+                    print("")
+    elif decyzja == "exit":
+        break
+    else:
+        continue
