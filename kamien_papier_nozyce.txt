@@ -1,0 +1,112 @@
+import random
+
+lista_wszystkich_opcji = ["rock", "fire", "scissors", "snake", "human", "tree", "wolf", "sponge", "paper", "air", "water", "dragon", "devil", "lightning", "gun"]
+file1 = open('rating.txt','r')
+
+imie_gracza = input("Enter your name:")
+print("Hello " + imie_gracza)
+for rekord in file1:
+    imie, punkty = rekord.split()
+    if imie == imie_gracza:
+        startowe_punkty = punkty
+        break
+    else:
+        startowe_punkty = 0
+
+wybor_opcji_gracza = input()
+if wybor_opcji_gracza == "":
+    print("Okay, let's start")
+    while True:
+        a = input()
+        possibilities = ['rock', 'paper', 'scissors']
+        if a == "!exit":
+            print("Bye!")
+            break
+        elif a == "!rating":
+            print("Your rating: ", startowe_punkty)
+            continue
+        elif a not in possibilities:
+            print("Invalid input")
+            continue
+        else:
+
+            computer_choice = random.choice(possibilities)
+
+            if a == "scissors" and computer_choice == "paper":
+                print("Well done. The computer chose paper and failed")
+                startowe_punkty = int(startowe_punkty) + 100
+            elif a == "rock" and computer_choice == "scissors":
+                print("Well done. The computer chose scissors and failed")
+                startowe_punkty = int(startowe_punkty) + 100
+            elif a == "paper" and computer_choice == "rock":
+                print("Well done. The computer chose rock and failed")
+                startowe_punkty = int(startowe_punkty) + 100
+            elif a == "scissors" and computer_choice == "scissors":
+                print("There is a draw (scissors)")
+                startowe_punkty = int(startowe_punkty) + 50
+            elif a == "rock" and computer_choice == "rock":
+                print("There is a draw (rock)")
+                startowe_punkty = int(startowe_punkty) + 50
+            elif a == "paper" and computer_choice == "paper":
+                print("There is a draw (paper)")
+                startowe_punkty = int(startowe_punkty) + 50
+            elif a == "scissors" and computer_choice == "rock":
+                print("Sorry, but the computer chose rock")
+            elif a == "rock" and computer_choice == "paper":
+                print("Sorry, but the computer chose paper")
+            elif a == "paper" and computer_choice == "scissors":
+                print("Sorry, but the computer chose scissors")
+
+else:
+    print("Okay, let's start")
+    lista_opcji_gracza = wybor_opcji_gracza.split(",")
+    lista_opcji_gry =[]
+    for i in lista_wszystkich_opcji:
+        if i in lista_opcji_gracza:
+            lista_opcji_gry.append(i)
+        else:
+            continue
+    ###print(lista_opcji_gry)
+    liczba_opcji_wygr_przegr = (len(lista_opcji_gracza) - 1)/2
+    while True:
+        a1 = input()
+
+        if a1 == "!exit":
+            print("Bye!")
+            break
+        elif a1 == "!rating":
+            print("Your rating: ", startowe_punkty)
+            continue
+        elif a1 not in lista_opcji_gry:
+            print("Invalid input")
+            continue
+        else:
+            indeks_wybranego_elementu = lista_opcji_gry.index(a1)
+            lista_opcji_przegr_zwybr = []
+            k = 0
+            q = 0
+            while k + q < liczba_opcji_wygr_przegr:
+                if indeks_wybranego_elementu + 1 + k <= len(lista_opcji_gracza) - 1:
+                    lista_opcji_przegr_zwybr.append(lista_opcji_gry[lista_opcji_gry.index(a1) + 1 + k])
+                    k += 1
+                else:
+                    lista_opcji_przegr_zwybr.append(lista_opcji_gry[q])
+                    q += 1
+            ###print(lista_opcji_przegr_zwybr)
+            lista_opcji_wygr_zwybr = []
+            for y in lista_opcji_gry:
+                if y in lista_opcji_przegr_zwybr:
+                    continue
+                else:
+                    lista_opcji_wygr_zwybr.append(y)
+            lista_opcji_wygr_zwybr.remove(a1)
+            ###print(lista_opcji_wygr_zwybr)
+            computer_choice = random.choice(lista_opcji_gry)
+            if computer_choice in lista_opcji_wygr_zwybr:
+                print("Sorry, but the computer chose", computer_choice)
+            elif computer_choice in lista_opcji_przegr_zwybr:
+                print("Well done. The computer chose", computer_choice, " and failed")
+                startowe_punkty = int(startowe_punkty) + 100
+            else:
+                print("There is a draw ", computer_choice)
+                startowe_punkty = int(startowe_punkty) + 50
