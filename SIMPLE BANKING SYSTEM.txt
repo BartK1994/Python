@@ -1,0 +1,168 @@
+import random
+import sqlite3
+conn = sqlite3.connect('card.s3db')
+cur = conn.cursor()
+cur.execute("""CREATE TABLE IF NOT EXISTS card (
+        id INTEGER,
+        number TEXT,
+        pin TEXT,
+        balance INTEGER DEFAULT 0
+    )""")
+conn.commit()
+stala = str(400000)
+while True:
+    print("""1. Create an account
+    2. Log into account
+    0. Exit""")
+    a = input()
+    if a == str(0):
+        print("Bye!")
+        break
+    elif a == str(1):
+        global nr_konta
+        global pin
+        s1 = random.randrange(10)
+        s2 = random.randrange(10)
+        s3 = random.randrange(10)
+        s4 = random.randrange(10)
+        s5 = random.randrange(10)
+        s6 = random.randrange(10)
+        s7 = random.randrange(10)
+        s8 = random.randrange(10)
+        s9 = random.randrange(10)
+        lista = [s1, s2, s3, s4, s5, s6, s7, s8, s9]
+        print(lista)
+        a = 0
+        while a <= 8:
+            lista[a] = lista[a] * 2
+            if lista[a] > 9:
+                lista[a] = lista[a] - 9
+            a = a + 2
+
+        suma_spr = 0
+        print(lista)
+        for k in lista:
+            suma_spr += k
+        print(suma_spr)
+        pomocnicza = str(8 + suma_spr)
+
+        if (8 + suma_spr) % 10 == 0:
+            s10 = 0
+        else:
+            s10 = 10 - ((8 + suma_spr) % 10)
+        print(s10)
+        p1 = str(random.randrange(10))
+        p2 = str(random.randrange(10))
+        p3 = str(random.randrange(10))
+        p4 = str(random.randrange(10))
+        nr_konta = stala + str(s1) + str(s2) + str(s3) + str(s4) + str(s5) + str(s6) + str(s7) + str(s8) + str(s9) + str(s10)
+        pin = p1 + p2 + p3 + p4
+
+
+        print("""Your card has been created
+    Your card number:""")
+        print(nr_konta)
+        print("Your card PIN:")
+        print(pin)
+        id_calc = len(cur.fetchall()) + 1
+
+        cur.execute('INSERT INTO card (id, number, pin, balance) VALUES ({}, {}, {}, {})'.format(id_calc, nr_konta, "'" + pin + "'", 0))
+        conn.commit()
+    else:
+        wprow_karty = input("Enter your card number:")
+        wprow_pin = input("Enter your PIN:")
+        my_tuple = tuple((wprow_karty, wprow_pin))
+        print(my_tuple)
+        cur.execute('SELECT number, pin FROM card')
+        res_cards = cur.fetchall()
+        conn.commit()
+        print(res_cards)
+        if my_tuple in res_cards:
+            print("You have successfully logged in!")
+            while True:
+                print("""1. Balance
+                2. Add income
+                3. Do transfer
+                4. Close account
+                5. Log out
+                0. Exit""")
+                bb = input()
+                if bb == str(1):
+                    cur.execute('SELECT balance FROM card WHERE number = ({})'.format(wprow_karty))
+                    res = cur.fetchall()
+                    conn.commit()
+                    tup = res[0]
+                    print("Balance: ", tup[0])
+                elif bb == str(2):
+                    income_to_add = input("Enter income:")
+                    cur.execute('SELECT balance FROM card WHERE number = ({})'.format(wprow_karty))
+                    current_balance_as_list = cur.fetchall()
+                    conn.commit()
+                    tup_bal = current_balance_as_list[0]
+                    account_bal = int(tup_bal[0])
+                    updated_balance = account_bal + int(income_to_add)
+                    cur.execute('UPDATE card SET balance = ({}) WHERE number = ({})'.format(updated_balance, wprow_karty))
+                    conn.commit()
+                    print("Income was added!")
+                elif bb == str(3):
+                    print("Transfer")
+                    adresat_przelewu = input("Enter card number:")
+                    if adresat_przelewu == wprow_karty:
+                        print("You can't transfer money to the same account!")
+                        break
+                    def luhn(n):
+                        r = [int(ch) for ch in str(n)][::-1]
+                        return (sum(r[0::2]) + sum(sum(divmod(d * 2, 10)) for d in r[1::2])) % 10 == 0
+                    luhn(adresat_przelewu)
+                    if luhn(adresat_przelewu) == True:
+                        adresat_tuple = tuple((adresat_przelewu,))
+                        cur.execute('SELECT number FROM card')
+                        res_cards_adresat = cur.fetchall()
+                        conn.commit()
+                        if adresat_tuple in res_cards_adresat:
+                            ile_pieniedzy = input("Enter how much money you want to transfer:")
+                            cur.execute('SELECT balance FROM card WHERE number = ({})'.format(wprow_karty))
+                            lista_bal_mojej_karty = cur.fetchall()
+                            conn.commit()
+                            bal_mojej_karty = lista_bal_mojej_karty[0]
+
+                            cur.execute('SELECT balance FROM card WHERE number = ({})'.format(adresat_przelewu))
+                            lista_bal_jego_karty = cur.fetchall()
+                            conn.commit()
+                            bal_jego_karty = lista_bal_jego_karty[0]
+
+                            if int(ile_pieniedzy) > bal_mojej_karty[0]:
+                                print("Not enough money!")
+
+                            else:
+                                cur.execute('UPDATE card SET balance = ({}) WHERE number = ({})'.format(bal_mojej_karty[0] - int(ile_pieniedzy), wprow_karty))
+                                conn.commit()
+                                cur.execute('UPDATE card SET balance = ({}) WHERE number = ({})'.format(bal_jego_karty[0] + int(ile_pieniedzy), adresat_przelewu))
+                                conn.commit()
+                                print("Success!")
+
+
+
+                        else:
+                            print("Such a card does not exist.")
+
+
+                    else:
+                        print("Probably you made a mistake in the card number. Please try again!")
+
+
+
+
+                elif bb == str(4):
+                    cur.execute('DELETE FROM card WHERE number = ({})'.format(wprow_karty))
+                    conn.commit()
+                    print("The account has been closed!")
+                    break
+                elif bb == str(0):
+                    print("Bye !")
+                    exit()
+                else:
+                    print("You have successfully logged out!")
+                    break
+        else:
+            print("Wrong card number or PIN!")
