@@ -1,5 +1,5 @@
 import math
-def ile_znakow(ciag_zn, znak):
+def ile_znakow(ciag_zn, znak):    #funkcja zliczajaca ile razy wystepuje dany znak w ciagu znakow
     lis_tego_co_chcemy = []
     for q in ciag_zn:
         if q == znak:
@@ -7,7 +7,9 @@ def ile_znakow(ciag_zn, znak):
         else:
             continue
     return len(lis_tego_co_chcemy)
+# poczatkowy uklad planszy(puste pola)
 ciag = "_________"
+# wyciagniecie poszczegolnych elementow z ciagu i utworzenie na ich podstawie planszy             
 e1e1 = ciag[0]
 e1e2 = ciag[1]
 e1e3 = ciag[2]
@@ -25,23 +27,23 @@ print("---------")
 p = 0
 while True:
     global symbol
-    if p in [0, 2, 4, 6, 8]:
+    if p in [0, 2, 4, 6, 8]:     #zaczyna X, a potem Y na zmiane
         symbol = "X"
     else:
         symbol = "O"
-    b = input("Enter the coordinates:")
+    b = input("Enter the coordinates:")        #x - wiersz, y- kolumna def miejsce gdzie wpisany zostanie symbol
     x, y = b.split()
-    if not (x.isdecimal() or y.isdecimal()):
+    if not (x.isdecimal() or y.isdecimal()):      #jesli x albo y nie sa cyframi, wyrzuc blad. warunek petli jest zawsze Prawdziwy, wiec pojawi sie znow monit o wprowadzenie wspolrzednych
 	    print("You should enter numbers!")
     elif int(x) > 3 or int(x) < 1 or int(y) > 3 or int(y) < 1:
         print("Coordinates should be from 1 to 3!")
 
-    elif eval("e" + x + "e" + y) == "X" or eval("e" + x + "e" + y) == "O":
+    elif eval("e" + x + "e" + y) == "X" or eval("e" + x + "e" + y) == "O":         #eval przeliczy wartosc konkretnej zmiennej. Sprawdzamy tutaj czy na odpow miejscu juz nie ma kolka albo krzyzyka
         print("This cell is occupied! Choose another one!")
 
-    else:
-        if x == "1":
-            s = list(ciag)
+    else:              #w innym wypadku wstaw odpowieni symbol
+        if x == "1":     #w zaleznosci od numeru wiersza, sa trzy warianty gdzie wstawimy symbol na naszej liscie. wczesniej zdefiniowany ciag zamieniamy na liste, bo tylko tak bedziemy mogli
+            s = list(ciag)          # podmienic element _ na symbol. Nastepnie konwertujemy element s na ciag liter, zczytujemy poszczegolne symbole i drukujemy plansze
             s[int(x) + int(y) - 2] = symbol
             "".join(s)
         elif x == "2":
@@ -66,7 +68,8 @@ while True:
         print("| " + e2e1 + " " + e2e2 + " " + e2e3 + " |")
         print("| " + e3e1 + " " + e3e2 + " " + e3e3 + " |")
         print("---------")
-        ciag = s
+        ciag = s       # aktualizujemy wyjsciowy ciag na potrzeby kolejnych iteracji petli
+	# mamy 8 zwycieskich kombinacji na planszy: 3 w pionie, 3 w poziomie i 2 na skos. sprawdzamy czy po ostatnije aktualizaji planszy ktos juz nie wygral, a moze jest remis
         podciag_1 = e1e1 + e1e2 + e1e3
         podciag_2 = e2e1 + e2e2 + e2e3
         podciag_3 = e3e1 + e3e2 + e3e3
@@ -76,16 +79,16 @@ while True:
         podciag_7 = e1e1 + e2e2 + e3e3
         podciag_8 = e1e3 + e2e2 + e3e1
         lista_podciagow = [podciag_1, podciag_2, podciag_3, podciag_4, podciag_5, podciag_6, podciag_7, podciag_8]
-        print(lista_podciagow)
+        # print(lista_podciagow)
         if "XXX" not in lista_podciagow and "OOO" not in lista_podciagow and "_" in ciag and abs(ile_znakow(ciag, "X") - ile_znakow(ciag, "O")) <= 1:
             p += 1
-            continue
+            continue     #jesli nikt nie wygral, zmien znak i przejdz do kolejnej iteracji petli
         elif "XXX" not in lista_podciagow and "OOO" not in lista_podciagow and "_" not in ciag:
             print("Draw")
-            break
+            break  #konczy program
         elif "XXX" in lista_podciagow and "OOO" not in lista_podciagow and abs(ile_znakow(ciag, "X") - ile_znakow(ciag, "O")) <= 1:
             print("X wins")
-            break
+            break 
         elif "OOO" in lista_podciagow and "XXX" not in lista_podciagow and abs(ile_znakow(ciag, "X") - ile_znakow(ciag, "O")) <= 1:
             print("O wins")
             break
