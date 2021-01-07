@@ -1,0 +1,141 @@
+import random
+import math
+
+lista_nagrod = [0.01, 0.20, 0.50, 1, 5, 10, 20, 50, 100, 200, 300, 400, 500, 1000, 2500, 5000, 7500, 10000, 20000, 30000, 40000, 50000, 100000, 300000, 500000, 1000000]
+walizka1 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka1)
+walizka2 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka2)
+walizka3 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka3)
+walizka4 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka4)
+walizka5 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka5)
+walizka6 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka6)
+walizka7 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka7)
+walizka8 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka8)
+walizka9 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka9)
+walizka10 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka10)
+walizka11 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka11)
+walizka12 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka12)
+walizka13 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka13)
+walizka14 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka14)
+walizka15 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka15)
+walizka16 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka16)
+walizka17 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka17)
+walizka18 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka18)
+walizka19 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka19)
+walizka20 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka20)
+walizka21 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka21)
+walizka22 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka22)
+walizka23 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka23)
+walizka24 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka24)
+walizka25 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka25)
+walizka26 = random.choice(lista_nagrod)
+lista_nagrod.remove(walizka26)
+
+lista_walizek = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26']
+global pozostale_nagrody
+pozostale_nagrody = [0.01, 0.20, 0.50, 1, 5, 10, 20, 50, 100, 200, 300, 400, 500, 1000, 2500, 5000, 7500, 10000, 20000, 30000, 40000, 50000, 100000, 300000, 500000, 1000000]
+numer_twojej_walizki = input("Ktora walizkę wybierasz? Podaj numer od 1 do 26: ")
+#oblsuga bledu
+lista_walizek.remove(numer_twojej_walizki)
+
+print("Twoja walizka: ", "walizka"+str(numer_twojej_walizki), ".Pozostałe walizki: ", lista_walizek)
+k = 0
+dotychczasowe_propozycje = []
+while len(lista_walizek) > 1:
+    kolejne_liczby_otw_walizek = [6, 5, 4, 3, 2, 1, 1, 1, 1]
+    lista_wybr_walizek_w_rzucie = []
+    print("Otworz", kolejne_liczby_otw_walizek[k], "walizek")
+    while len(lista_wybr_walizek_w_rzucie) < kolejne_liczby_otw_walizek[k]:
+        pierwsze_otwieranie = input("Wybierz numer walizki: ")
+        if pierwsze_otwieranie in lista_walizek:
+            lista_walizek.remove(pierwsze_otwieranie)
+            #print("W otwartej walizce znajduje sie ", eval("walizka" + pierwsze_otwieranie), "zlotych")
+            print("W otwartej walizce znajduje sie")
+            print("""      ____
+_____/____\_____
+|              |
+|  """, eval("walizka" + pierwsze_otwieranie), """   
+|   zlotych    |
+|______________|""")
+            lista_wybr_walizek_w_rzucie.append(pierwsze_otwieranie)
+            print("Pozostale walizki: ")
+            print(lista_walizek)
+            print("Pozostale nagrody: ")
+            pozostale_nagrody.remove(eval("walizka" + pierwsze_otwieranie))
+            print(pozostale_nagrody)
+
+        else:
+            print("Nieprawidlowy numer walizki")
+            continue
+    k += 1
+    print("Czekaj na propozycje banku (za ile chce odkupic twoja walizkę)  ")
+
+    def propozycja_banku():
+        global suma_nagrod
+        suma_nagrod = 0
+        for i in lista_walizek:
+            suma_nagrod += eval("walizka"+i)
+        ilosc_nagrod = len(lista_walizek)
+        pierwsza_propozycja_banku = (suma_nagrod + eval("walizka"+str(numer_twojej_walizki))) / (ilosc_nagrod + 1)
+        return(round(pierwsza_propozycja_banku, 2))
+    print(propozycja_banku(), "zlotych")
+    dotychczasowe_propozycje.append(propozycja_banku())
+    print("Dotychczasowe propozycje: ", dotychczasowe_propozycje)
+    global deal1
+
+    while True:
+        deal1 = input("""DEAL OR NO DEAL?
+            DEAL - sprzedajesz walizke za kwote oferowana przez bank (koniec gry)
+            NO DEAL - grasz dalej - otwierasz kolejna walizke.""")
+        if deal1 == "DEAL":
+            print("Gratulacje, wygrales ", propozycja_banku(), "zlotych")
+            print("W twojej walizce bylo ", eval("walizka" + numer_twojej_walizki), "zlotych")
+            exit()
+        elif deal1== "NO DEAL":
+            print("grasz dalej")
+            break
+        else:
+            continue
+while True:
+    print("Pozostale nieotwarte walizki: Twoja walizka- ", "walizka"+str(numer_twojej_walizki), "oraz ", "walizka"+str(lista_walizek[0]))
+    czy_zamienic = input("Czy chcesz zamienic walizki? (TAK/NIE)")
+    if czy_zamienic == "NIE":
+        print("Gratulacje, wygrales ", eval("walizka"+numer_twojej_walizki), "zlotych")
+        if eval("walizka"+numer_twojej_walizki) > suma_nagrod:
+            print("Dobra decyzja!")
+        else:
+            print("Zla decyzja :(")
+        break
+    elif czy_zamienic == "TAK":
+        print("Gratulacje, wygrales ", suma_nagrod , "zlotych")
+        if eval("walizka"+numer_twojej_walizki) > suma_nagrod:
+            print("Zla decyzja :(")
+        else:
+            print("Dobra decyzja!")
+        break
+    else:
+        continue
